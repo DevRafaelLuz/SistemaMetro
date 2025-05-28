@@ -1,4 +1,4 @@
-# Sistema de Metro
+# Sistema de Metrô
 
 - Este projeto implementará um **Sistema de Metrô**, utilizando `Grafos`.
 
