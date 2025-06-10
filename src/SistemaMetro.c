@@ -20,6 +20,7 @@ void exibirMenu() {
         printf("\n--- SISTEMA DE METRO ---\n");
         printf("1 - Remover ligacao entre estacoes\n");
         printf("2 - Exibir matriz das estacoes atualizada\n");
+        printf("3 - Buscar caminho entre estacoes (BFS)\n");
         printf("0 - Sair\n");
         printf("Escolha uma opcao: ");
 }
@@ -72,7 +73,6 @@ void removerAresta(Grafo *grafo, int origem, int destino){
     printf("Ligacao removida entre as estacoes %d e %d.\n", origem, destino);
 }
 
-
 void exibirMatriz(Grafo *grafo){
     printf("Matriz das estacoes:\n");
     for(int i = 0; i < grafo->numVertices; i++){
@@ -81,6 +81,53 @@ void exibirMatriz(Grafo *grafo){
         }
         printf("\n");
     }
+}
+
+void buscaLargura(Grafo *grafo, int origem, int destino) {
+    int *visitado = (int*)calloc(grafo->numVertices, sizeof(int));
+    int *fila = (int*)malloc(grafo->numVertices * sizeof(int));
+    int *anterior = (int*)malloc(grafo->numVertices * sizeof(int));
+    int inicio = 0, fim = 0, achou = 0;
+
+    for(int i = 0; i < grafo->numVertices; i++) anterior[i] = -1;
+
+    fila[fim++] = origem;
+    visitado[origem] = 1;
+
+    while(inicio < fim) {
+        int atual = fila[inicio++];
+        if(atual == destino) {
+            achou = 1;
+            break;
+        }
+        for(int i = 0; i < grafo->numVertices; i++) {
+            if(grafo->matrizAdj[atual][i] && !visitado[i]) {
+                fila[fim++] = i;
+                visitado[i] = 1;
+                anterior[i] = atual;
+            }
+        }
+    }
+
+    if(achou) {
+        printf("Caminho: ");
+        int caminho[grafo->numVertices], tam = 0, v = destino;
+        while(v != -1) {
+            caminho[tam++] = v;
+            v = anterior[v];
+        }
+        for(int i = tam-1; i >= 0; i--) {
+            printf("%d", caminho[i]);
+            if(i > 0) printf(" -> ");
+        }
+        printf("\n");
+    } else {
+        printf("Nao existe caminho entre as estacoes %d e %d.\n", origem, destino);
+    }
+
+    free(visitado);
+    free(fila);
+    free(anterior);
 }
 
 int main() {
@@ -105,6 +152,13 @@ int main() {
                 break;
             case 2:
                 exibirMatriz(metro);
+                break;
+            case 3:
+                printf("Digite o numero da estacao de origem (de 0 a 19): ");
+                scanf("%d", &origem);
+                printf("Digite o numero da estacao de destino (de 0 a 19): ");
+                scanf("%d", &destino);
+                buscaLargura(metro, origem, destino);
                 break;
             case 0:
                 printf("Saindo...\n");
