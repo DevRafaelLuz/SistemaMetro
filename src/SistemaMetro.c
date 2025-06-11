@@ -133,13 +133,12 @@ void buscaLargura(Grafo *grafo, int origem, int destino) {
 }
 
 int main() {
-    int numEstacoes = 20;
-    Grafo *metro = criarGrafo(numEstacoes);
+    Grafo *metro = criarGrafo(MAX_VERTICES);
 
     inicializarGrafoCompleto(metro);
 
     int opcao, origem, destino;
-    
+
     system("cls");
     do{
         exibirMenu();
@@ -171,7 +170,7 @@ int main() {
         }
     }while(opcao != 0);
     
-    for(int i = 0; i < numEstacoes; i++){
+    for(int i = 0; i < MAX_VERTICES; i++){
         free(metro->matrizAdj[i]);
     }
     free(metro->matrizAdj);
