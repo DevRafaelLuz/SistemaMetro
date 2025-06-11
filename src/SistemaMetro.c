@@ -21,8 +21,9 @@ Grafo* criarGrafo(int numVertices){
 void exibirMenu() {
         printf("\n--- SISTEMA DE METRO ---\n");
         printf("1 - Remover ligacao entre estacoes\n");
-        printf("2 - Exibir matriz das estacoes atualizada\n");
-        printf("3 - Buscar caminho entre estacoes (BFS)\n");
+        printf("2 - Inserir ligacao entre estacoes\n");
+        printf("3 - Exibir matriz das estacoes atualizada\n");
+        printf("4 - Buscar caminho entre estacoes (BFS)\n");
         printf("0 - Sair\n");
         printf("Escolha uma opcao: ");
 }
@@ -57,8 +58,22 @@ void inicializarGrafoCompleto(Grafo *grafo){
     fclose(arquivo);
 }
 
-void inserirAresta() {
-
+void inserirAresta(Grafo *grafo, int origem, int destino) {
+	if (origem < 0 || origem >= grafo->numVertices || destino < 0 || destino >= grafo->numVertices) {
+		printf("\nErro: estacao invalida!\n");
+		return;
+	} else if (origem == destino) {
+		printf("\nErro: impossivel ligar uma estacao a ela mesma!\n");
+		return;
+	}
+	
+	if (grafo->matrizAdj[origem][destino] == 0) {
+		grafo->matrizAdj[origem][destino] = 1;
+		grafo->matrizAdj[destino][origem] = 1;
+		printf("\nLigacao inserida com sucesso!\n");
+	} else {
+		printf("\nJa existe uma ligacao entre essas estacoes!\n");
+	}
 }
 
 void removerAresta(Grafo *grafo, int origem, int destino){
@@ -146,16 +161,23 @@ int main() {
         
         switch(opcao){
             case 1:
-                printf("Digite o numero da estacao de origem (de 0 a 19): ");
+                printf("Remover - Digite o numero da estacao de origem (de 0 a 19): ");
                 scanf("%d", &origem);
-                printf("Digite o numero da estacao de destino (de 0 a 19): ");
+                printf("Remover - Digite o numero da estacao de destino (de 0 a 19): ");
                 scanf("%d", &destino);
                 removerAresta(metro, origem, destino);
                 break;
             case 2:
+            	printf("Inserir - Digite o numero da estacao de origem (de 0 a 19): ");
+            	scanf("%d", &origem);
+            	printf("Inserir - Digite o numero da estacao de origem (de 0 a 19): ");
+            	scanf("%d", &destino);
+            	inserirAresta(metro, origem, destino);
+            	break;
+            case 3:
                 exibirMatriz(metro);
                 break;
-            case 3:
+            case 4:
                 printf("Digite o numero da estacao de origem (de 0 a 19): ");
                 scanf("%d", &origem);
                 printf("Digite o numero da estacao de destino (de 0 a 19): ");
