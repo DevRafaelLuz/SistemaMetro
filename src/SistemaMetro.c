@@ -170,7 +170,7 @@ int main() {
             case 2:
             	printf("Inserir - Digite o numero da estacao de origem (de 0 a 19): ");
             	scanf("%d", &origem);
-            	printf("Inserir - Digite o numero da estacao de origem (de 0 a 19): ");
+            	printf("Inserir - Digite o numero da estacao de destino (de 0 a 19): ");
             	scanf("%d", &destino);
             	inserirAresta(metro, origem, destino);
             	break;
