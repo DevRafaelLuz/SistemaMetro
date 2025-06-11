@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MAX_VERTICES 20
+
 typedef struct{
     int numVertices;
     int **matrizAdj;
@@ -26,33 +28,33 @@ void exibirMenu() {
 }
 
 void inicializarGrafoCompleto(Grafo *grafo){
-    int matriz[20][20] = {
-        {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0},
-        {0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0},
-        {0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1},
-        {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1}
-    };
-    for(int i = 0; i < grafo->numVertices; i++){
+    int matriz[MAX_VERTICES][MAX_VERTICES];
+    int i;
+
+    FILE *arquivo = fopen("../../data/grafo.txt", "r");
+    if (!arquivo) {
+        printf("Erro ao abrir o arquivo grafo.txt\n");
+        exit(1);
+    }
+
+    for(i = 0; i < MAX_VERTICES; i++){
+        for(int j = 0; j < MAX_VERTICES; j++){
+            int valor;
+            if (fscanf(arquivo, "%d;", &valor) != 1) {
+                printf("Erro ao ler o arquivo grafo.txt na linha %d coluna %d\n", i+1, j+1);
+                fclose(arquivo);
+                exit(1);
+            }
+            matriz[i][j] = valor;
+        }
+    }
+
+    for(i = 0; i < grafo->numVertices; i++){
         for(int j = 0; j < grafo->numVertices; j++){
             grafo->matrizAdj[i][j] = matriz[i][j];
         }
     }
+    fclose(arquivo);
 }
 
 void inserirAresta() {
@@ -137,8 +139,9 @@ int main() {
     inicializarGrafoCompleto(metro);
 
     int opcao, origem, destino;
+    
+    system("cls");
     do{
-        system("cls");
         exibirMenu();
         scanf("%d", &opcao);
         
@@ -168,7 +171,6 @@ int main() {
         }
     }while(opcao != 0);
     
-    // Liberacao memoria
     for(int i = 0; i < numEstacoes; i++){
         free(metro->matrizAdj[i]);
     }
